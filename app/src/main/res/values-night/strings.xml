@@ -3,9 +3,11 @@
     <string name="btn_add" />
     <string name="nome">Welington</string>
     <string name="numero">979818403</string>
-    <string name="nameDialog">Nome</string>
-    <string name="numberDialog">Numero</string>
+    <string name="nome_dialog">nome</string>
+    <string name="numero_dialog">numero</string>
     <string name="novo_ct">Novo contato</string>
-    <string name="cancelar">Cancelar</string>
-    <string name="salvar">Salvar</string>
+    <string name="cancelar">cancelar</string>
+    <string name="salvar">salvar</string>
+    <string name="nome_toolbar">Contatos</string>
+    <string name="btn_info">botão informações</string>
 </resources>

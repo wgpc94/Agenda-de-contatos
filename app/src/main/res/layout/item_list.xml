@@ -12,8 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nome"
-        android:layout_margin="20dp"
-        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         />
@@ -22,8 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/numero"
-        android:layout_margin="20dp"
-        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         />

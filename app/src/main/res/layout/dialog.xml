@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:layout_gravity="center_horizontal"
-    android:layout_margin="16dp">
+    android:layout_margin="5dp">
 
     <EditText
         android:id="@+id/nomeEdt"
