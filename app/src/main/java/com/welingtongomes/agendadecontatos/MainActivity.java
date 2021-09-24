@@ -1,10 +1,5 @@
 package com.welingtongomes.agendadecontatos;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements DialogListeners {
@@ -61,12 +61,27 @@ public class MainActivity extends AppCompatActivity implements DialogListeners {
         }
     }
 
+    @Override
+    public void updatedContact(int id, String nome, String numero) {
+        if (valido(nome, numero)){
+            new Thread(() -> {
+                Long upId = db.updateContact(id, nome, numero);
+                runOnUiThread(()->{
+                    if(upId > 0){
+                        Toast.makeText(this,"Contato atualizado com sucesso", Toast.LENGTH_SHORT)
+                                .show();
+                        searchForContacts();
+                    }
+                });
+
+            }).start();
+        }
+    }
+
     private void searchForContacts() {
         new Thread(() -> {
             List<ContactModel> list = db.getContactList();
-            runOnUiThread(() -> {
-                adapter.setList(list);
-            });
+            runOnUiThread(() -> adapter.setList(list));
         }).start();
     }
 
@@ -76,14 +91,14 @@ public class MainActivity extends AppCompatActivity implements DialogListeners {
             Toast.makeText(this,"NOME DEVE SER PRENCHIDO",Toast.LENGTH_SHORT).show();
             verifica = false;
         }
-        if (numero.isEmpty() && numero.length()< 9 && numero.length() <8){
+        if (numero.isEmpty() && numero.length() <8){
             Toast.makeText(this,"NUMERO DEVE TER NO MINIMO OITO NUMEROS",Toast.LENGTH_SHORT).show();
             verifica = false;
         }
         return verifica;
     }
 
-   public static class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>{
+   public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> implements OnAdapterItemClick {
 
        private List<ContactModel> list;
 
@@ -105,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements DialogListeners {
        @Override
        public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
            ContactModel item = list.get(position);
-           holder.bind(item);
+           holder.bind(item, this);
        }
 
        @Override
@@ -113,18 +128,55 @@ public class MainActivity extends AppCompatActivity implements DialogListeners {
            return list.size();
        }
 
-       public static class MainViewHolder extends RecyclerView.ViewHolder{
+       @Override
+       public void onClick(ContactModel contactModel) {
+           DialogCustom dialog = new DialogCustom(contactModel);
+           dialog.show(getSupportFragmentManager(),null);
+       }
+
+       @Override
+       public void onLongClick(int id, int position) {
+           AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                   .setMessage("Você realmente quer excluir o registro?")
+                   .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
+                   .setPositiveButton("Sim", (dialog, which) -> {
+
+                       new Thread(() -> {
+                           long cId = db.removeContact(id);
+
+                           runOnUiThread(() -> {
+                               if (cId > 0){
+                                   Toast.makeText(MainActivity.this,"Registro removido com sucesso",Toast.LENGTH_LONG)
+                                           .show();
+                                   list.remove(position);
+                                   notifyDataSetChanged();
+                               }
+                           });
+                       }).start();
+
+                   }).create();
+           alertDialog.show();
+       }
+
+       public class MainViewHolder extends RecyclerView.ViewHolder{
 
             public MainViewHolder(@NonNull View itemView) {
                 super(itemView);
             }
 
-           public void bind(ContactModel currentItem) {
+           public void bind(ContactModel currentItem , OnAdapterItemClick onItemClick) {
                TextView nome = itemView.findViewById(R.id.nomeTv);
                TextView numero = itemView.findViewById(R.id.numeroTv);
 
                nome.setText(currentItem.getNome());
                numero.setText(currentItem.getNumero());
+
+               itemView.setOnClickListener(v -> onItemClick.onClick(currentItem));
+
+               itemView.setOnLongClickListener(v -> {
+                   onItemClick.onLongClick(currentItem.getId(),getAdapterPosition());
+                   return false;
+               });
            }
         }
 
