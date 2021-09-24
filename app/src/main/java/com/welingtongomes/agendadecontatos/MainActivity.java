@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,15 @@ public class MainActivity extends AppCompatActivity implements DialogListeners {
         FloatingActionButton fab = findViewById(R.id.fab);
 
         fab.setOnClickListener(v -> openDialog());
+
+        ImageView btn_info_img = findViewById(R.id.btn_info);
+        btn_info_img.setOnClickListener(v -> {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+            dialog.setTitle(R.string.infoTitle);
+            dialog.setMessage(R.string.infoMenssage);
+            dialog.setPositiveButton(R.string.ok, null);
+            dialog.show();
+        });
     }
 
     private void openDialog() {

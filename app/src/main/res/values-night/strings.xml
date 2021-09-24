@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="btn_add" />
+    <string name="app_name">Agenda de contatos</string>
+    <string name="btn_add"> Botão adicionar</string>
     <string name="nome">Welington</string>
     <string name="numero">979818403</string>
     <string name="nome_dialog">nome</string>
     <string name="numero_dialog">numero</string>
-    <string name="novo_ct">Novo contato</string>
+    <string name="novo_ct">novo contato</string>
+    <string name="edt_ct">Editar contato</string>
     <string name="cancelar">cancelar</string>
     <string name="salvar">salvar</string>
     <string name="nome_toolbar">Contatos</string>
     <string name="btn_info">botão informações</string>
+    <string name="infoMenssage">exclua um contato selecionando com um click presionado, atualize um contato selecionando com um click</string>
+    <string name="infoTitle">Informações úteis</string>
+    <string name="ok">ok</string>
 </resources>
